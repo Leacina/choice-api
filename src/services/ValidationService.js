@@ -27,8 +27,8 @@ module.exports = app => {
     /**
      * Verifica se os dois objetos ou valores
      * são diferentes.
-     * @param {Objeto} valueA 
-     * @param {Objeto} valueB 
+     * @param {ObjetoA} valueA 
+     * @param {ObjetoB} valueB 
      * @param {Mensagem retornada ao usuario} msg 
      */
     function equalsOrError(valueA,valueB,msg){
@@ -38,5 +38,5 @@ module.exports = app => {
     /**
      * Retorna as funções 
      */
-    return{existsOrError,notExistsOrError,equalsOrError}
+    return { existsOrError, notExistsOrError, equalsOrError }
 }

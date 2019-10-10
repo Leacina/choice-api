@@ -8,9 +8,12 @@ const swaggerDocument = require('../swagger.json')
  */
 module.exports = app => {
 
-    //app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-
     //Rota para os casos
     app.route(URL + 'company')
-        .get(app.src.controllers.CompanyController.store)
+        .post(app.src.controllers.CompanyController.store)
+        .get(app.src.controllers.CompanyController.show)
+
+    
+    app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+
 }
