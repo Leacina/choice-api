@@ -1,9 +1,7 @@
 const express = require('express')
 const app = express()
 const consign = require('consign')
-const { Company } = require('./models/Company');
-
-
+const { Company } = require('./models');
 
 consign()
     .then('./src/config/middlewares.js')

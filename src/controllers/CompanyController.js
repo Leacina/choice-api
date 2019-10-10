@@ -25,9 +25,9 @@ module.exports = app => {
     */
     const store = async (req, res) => {
         try{
-
+            
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const Company = app.src.services.CompanyService.valideStore(req.body)
+            const Company = await app.src.services.CompanyService.valideStore(req.body)
 
             //Retorna o json com status de sucesso para o usuário
             return res.send(Company)
@@ -44,9 +44,6 @@ module.exports = app => {
                 }
             )
         }
-
-        //await app.src.services.CompanyService.valideStore(req.body)
-        //res.send('')
     }
     
     /**

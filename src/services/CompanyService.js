@@ -1,4 +1,4 @@
-const { Company } = require('../models/Company');
+const { Company } = require('../models');
 
 module.exports = app => {
     const {existsOrError} = app.src.services.ValidationService;
@@ -18,12 +18,12 @@ module.exports = app => {
             existsOrError(value.name,'Nome da empresa não foi informado')
             existsOrError(value.cnpj,'CNPJ da empresa não foi informado')
             existsOrError(value.cell_phone,'Número de telefone da empresa não foi informado')
-            return value
+
             //Insere o dado no banco de dados, caso de algum problema, lança uma exceção
             Company.create(value)
             .then(company => {
-                    //Retorna o JSON para o usuário caso retorne com sucesso.
-                    return company.toJSON();
+                //Retorna o JSON para o usuário caso retorne com sucesso.
+                return company.toJSON();
             }).catch(err => {
                 throw err;
             });
