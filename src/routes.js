@@ -13,6 +13,9 @@ module.exports = app => {
         .post(app.src.controllers.CompanyController.store)
         .get(app.src.controllers.CompanyController.show)
 
+    app.route(URL + 'company/:id')
+        .delete(app.src.controllers.CompanyController.destroy)
+
     
     app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 

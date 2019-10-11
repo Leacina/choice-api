@@ -20,14 +20,8 @@ module.exports = app => {
             existsOrError(value.cell_phone,'Número de telefone da empresa não foi informado')
 
             //Insere o dado no banco de dados, caso de algum problema, lança uma exceção
-            Company.create(value)
-            .then(company => {
-                //Retorna o JSON para o usuário caso retorne com sucesso.
-                return company.toJSON();
-            }).catch(err => {
-                throw err;
-            });
-
+            return Company.create(value)
+           
         }catch(err){
             //Se houver algum dado incorreto, lança exceção para o controller
             //com a mensagem de erro ja tratada.
@@ -36,5 +30,25 @@ module.exports = app => {
 
     }
 
-    return {valideStore}
+    const valideDestroy = async (value) => {
+
+        try{
+            //Delete a empresa
+            const rowsDeleted = Company.destroy({
+                where:{
+                    id: value
+                }
+            })
+          
+            //Caso não encontrar a empresa, gera uma exceção
+            existsOrError(rowsDeleted, 'Empresa não foi encontrada.')
+            
+            return rowsDeleted
+        }catch(err){
+            throw err
+        }
+
+    }
+
+    return {valideStore, valideDestroy}
 }

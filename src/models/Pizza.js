@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
         url: DataTypes.STRING,
         available: DataTypes.BOOLEAN,
         id_establishment: DataTypes.INTEGER,
+    },{
+        //Adicionado para gerar a tabela no singular
+        freezeTableName: true,
     });
 
     return Pizza

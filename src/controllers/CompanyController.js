@@ -60,7 +60,24 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const destroy = (req, res) => {
+    const destroy = async (req, res) => {
+
+        try{
+            const Company = await app.src.services.CompanyService.valideDestroy(req.params.id) 
+
+            res.send(Company)
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    name: 'sasa',
+                    cnpj: 'sasa',
+                    cell_phone: 'sasa',
+                    Erro: err 
+                }
+            )
+        }
 
     }
 

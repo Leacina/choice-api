@@ -4,6 +4,9 @@ module.exports = (sequelize, DataTypes) => {
         create_date: DataTypes.DATE,
         is_active: DataTypes.BOOLEAN,
         id_establishment: DataTypes.INTEGER,
+    },{
+        //Adicionado para gerar a tabela no singular
+        freezeTableName: true,
     });
 
     return Pizza_Caster

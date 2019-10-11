@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
         is_admin: DataTypes.BOOLEAN,
         id_establishment: DataTypes.INTEGER,
         id_login: DataTypes.INTEGER,
+    },{
+        //Adicionado para gerar a tabela no singular
+        freezeTableName: true,
     });
 
     return User
