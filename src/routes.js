@@ -1,4 +1,4 @@
-const URL = '/api/v1.0/'
+const URL = '/api/'
 
 const swaggerUi = require('swagger-ui-express')
 const swaggerDocument = require('../swagger.json')
