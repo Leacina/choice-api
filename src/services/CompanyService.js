@@ -30,6 +30,10 @@ module.exports = app => {
 
     }
 
+    /**
+     * Valida os dados que serão deletados
+     * @param {Valor que será validado} value 
+     */
     const valideDestroy = async (value) => {
 
         try{
@@ -50,5 +54,70 @@ module.exports = app => {
 
     }
 
-    return {valideStore, valideDestroy}
+    /**
+     * Valida os dados que serão alterados
+     * @param {Valor que será validado} value 
+     */
+    const valideUpdate = async (value) => {
+
+        try{
+            //Verifica se o objeto passado esta correto
+            existsOrError(value,'Formato dos dados invalido')
+
+            //Verifica se possui todos os dados foram passados
+            existsOrError(value.id,'Id da empresa não foi informado')
+            existsOrError(value.name,'Nome da empresa não foi informado')
+            existsOrError(value.cnpj,'CNPJ da empresa não foi informado')
+            existsOrError(value.cell_phone,'Número de telefone da empresa não foi informado')
+
+            //Update nos dados de acordo com o id
+            Company.update({ 
+                            name: value.name, 
+                            cnpj:value.cnpj, 
+                            cell_phone: value.cell_phone 
+                           }, 
+            {
+                where: {
+                  id: value.id
+                }
+            })
+
+        }catch(err){
+            throw err
+        }
+    }
+
+    /**
+    * Valida os dados que serão retornados
+    * @param {Valor que será validado} value 
+    */
+    const valideIndex = async () => {
+
+        try{
+           //Retorna todos as empresas
+           return Company.findAll()
+        }catch(err){
+            throw err
+        }
+
+    }
+
+    /**
+    * Valida os dados que serão retornados
+    * @param {Valor que será validado} value 
+    */
+   const valideShow = async (value) => {
+        try{
+            //Retorna todos as empresas
+            return Company.findAll({
+                where:{
+                    id:value
+                }
+            })
+        }catch(err){
+            throw err
+        }
+    }
+
+    return {valideStore, valideDestroy, valideShow, valideIndex, valideUpdate}
 }

@@ -5,8 +5,16 @@ module.exports = app => {
      * @param {request} req 
      * @param {response} res 
      */
-    const index = (req, res) => {
+    const index = async (req, res) => {
+        try{
+            const Companies = await app.src.services.CompanyService.valideIndex()
 
+            res.send(Companies)
+        }catch(err){
+            res.status(400).send({
+                erro:err
+            })
+        }
     }
 
     /**
@@ -14,8 +22,16 @@ module.exports = app => {
      * @param {request} req 
      * @param {response} res 
      */
-    const show = (req, res) => {
-        res.send('Hello World')
+    const show = async (req, res) => {
+        try{
+            const Company = await app.src.services.CompanyService.valideShow(req.params.id)
+
+            res.send(Company)
+        }catch(err){
+            res.status(400).send({
+                erro:err
+            })
+        }
     }
     
     /**
@@ -51,8 +67,27 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const update = (req, res) => {
+    const update = async (req, res) => {
+        try{
+            
+            //Valida as regras de negocio e retorna o objeto caso esteja correto
+            const Company = await app.src.services.CompanyService.valideUpdate(req.body)
 
+            //Retorna o json com status de sucesso para o usuário
+            return res.send(Company)
+
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    name: req.body.name,
+                    cnpj: req.body.cnpj,
+                    cell_phone: req.body.cell_phone,
+                    Erro: err 
+                }
+            )
+        }
     }
     
     /**
@@ -71,9 +106,6 @@ module.exports = app => {
             return res.status(400).send(
                 {
                     status: 400,
-                    name: 'sasa',
-                    cnpj: 'sasa',
-                    cell_phone: 'sasa',
                     Erro: err 
                 }
             )
