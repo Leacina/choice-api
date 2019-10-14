@@ -5,8 +5,16 @@ module.exports = app => {
      * @param {request} req 
      * @param {response} res 
      */
-    const index = (req, res) => {
+    const index = async (req, res) => {
+        try{
+            const Tables = await app.src.services.TableService.valideIndex()
 
+            res.send(Tables)
+        }catch(err){
+            res.status(400).send({
+                erro:err
+            })
+        }
     }
 
     /**
@@ -14,8 +22,16 @@ module.exports = app => {
      * @param {request} req 
      * @param {response} res 
      */
-    const show = (req, res) => {
+    const show = async (req, res) => {
+        try{
+            const Table = await app.src.services.TableService.valideShow(req.params.id)
 
+            res.send(Table)
+        }catch(err){
+            res.status(400).send({
+                erro:err
+            })
+        }
     }
     
     /**
@@ -23,8 +39,28 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const store = (req, res) => {
+    const store = async (req, res) => {
+        try{
+            
+            //Valida as regras de negocio e retorna o objeto caso esteja correto
+            const Table = await app.src.services.TableService.valideStore(req.body)
 
+            //Retorna o json com status de sucesso para o usuário
+            return res.send(Table)
+
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    name: req.body.name,
+                    code: req.body.code,
+                    is_active: req.body.is_active,
+                    id_establishment: req.body.id_establishment,
+                    Erro: err 
+                }
+            )
+        }
     }
     
     /**
@@ -32,8 +68,28 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const update = (req, res) => {
+    const update = async (req, res) => {
+        try{
+            
+            //Valida as regras de negocio e retorna o objeto caso esteja correto
+            const Table = await app.src.services.TableService.valideUpdate(req.body)
 
+            //Retorna o json com status de sucesso para o usuário
+            return res.send(Table)
+
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    name: req.body.name,
+                    code: req.body.code,
+                    is_active: req.body.is_active,
+                    id_establishment: req.body.id_establishment,
+                    Erro: err 
+                }
+            )
+        }
     }
     
     /**
@@ -41,7 +97,21 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const destroy = (req, res) => {
+    const destroy = async (req, res) => {
+
+        try{
+            const Table = await app.src.services.TableService.valideDestroy(req.params.id) 
+
+            res.send(Table)
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    Erro: err 
+                }
+            )
+        }
 
     }
 

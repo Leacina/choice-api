@@ -5,8 +5,16 @@ module.exports = app => {
      * @param {request} req 
      * @param {response} res 
      */
-    const index = (req, res) => {
+    const index = async (req, res) => {
+        try{
+            const PizzaDeclines = await app.src.services.PizzaDeclineService.valideIndex()
 
+            res.send(PizzaDeclines)
+        }catch(err){
+            res.status(400).send({
+                erro:err
+            })
+        }
     }
 
     /**
@@ -14,8 +22,16 @@ module.exports = app => {
      * @param {request} req 
      * @param {response} res 
      */
-    const show = (req, res) => {
+    const show = async (req, res) => {
+        try{
+            const PizzaDecline = await app.src.services.PizzaDeclineService.valideShow(req.params.id)
 
+            res.send(PizzaDecline)
+        }catch(err){
+            res.status(400).send({
+                erro:err
+            })
+        }
     }
     
     /**
@@ -23,8 +39,26 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const store = (req, res) => {
+    const store = async (req, res) => {
+        try{
+            
+            //Valida as regras de negocio e retorna o objeto caso esteja correto
+            const PizzaDecline = await app.src.services.PizzaDeclineService.valideStore(req.body)
 
+            //Retorna o json com status de sucesso para o usuário
+            return res.send(PizzaDecline)
+
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    id_command: req.body.id_command,
+                    id_pizza: req.body.id_pizza,
+                    Erro: err 
+                }
+            )
+        }
     }
     
     /**
@@ -32,8 +66,26 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const update = (req, res) => {
+    const update = async (req, res) => {
+        try{
+            
+            //Valida as regras de negocio e retorna o objeto caso esteja correto
+            const PizzaDecline = await app.src.services.PizzaDeclineService.valideUpdate(req.body)
 
+            //Retorna o json com status de sucesso para o usuário
+            return res.send(PizzaDecline)
+
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    id_command: req.body.id_command,
+                    id_pizza: req.body.id_pizza,
+                    Erro: err 
+                }
+            )
+        }
     }
     
     /**
@@ -41,7 +93,21 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const destroy = (req, res) => {
+    const destroy = async (req, res) => {
+
+        try{
+            const PizzaDecline = await app.src.services.PizzaDeclineService.valideDestroy(req.params.id) 
+
+            res.send(PizzaDecline)
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    Erro: err 
+                }
+            )
+        }
 
     }
 

@@ -5,8 +5,16 @@ module.exports = app => {
      * @param {request} req 
      * @param {response} res 
      */
-    const index = (req, res) => {
+    const index = async (req, res) => {
+        try{
+            const Logins = await app.src.services.LoginService.valideIndex()
 
+            res.send(Logins)
+        }catch(err){
+            res.status(400).send({
+                erro:err
+            })
+        }
     }
 
     /**
@@ -14,8 +22,16 @@ module.exports = app => {
      * @param {request} req 
      * @param {response} res 
      */
-    const show = (req, res) => {
+    const show = async (req, res) => {
+        try{
+            const Login = await app.src.services.LoginService.valideShow(req.params.id)
 
+            res.send(Login)
+        }catch(err){
+            res.status(400).send({
+                erro:err
+            })
+        }
     }
     
     /**
@@ -23,8 +39,26 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const store = (req, res) => {
+    const store = async (req, res) => {
+        try{
+            
+            //Valida as regras de negocio e retorna o objeto caso esteja correto
+            const Login = await app.src.services.LoginService.valideStore(req.body)
 
+            //Retorna o json com status de sucesso para o usuário
+            return res.send(Login)
+
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    email: req.body.email,
+                    password: req.body.password,
+                    Erro: err 
+                }
+            )
+        }
     }
     
     /**
@@ -32,8 +66,26 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const update = (req, res) => {
+    const update = async (req, res) => {
+        try{
+            
+            //Valida as regras de negocio e retorna o objeto caso esteja correto
+            const Login = await app.src.services.LoginService.valideUpdate(req.body)
 
+            //Retorna o json com status de sucesso para o usuário
+            return res.send(Login)
+
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    email: req.body.email,
+                    password: req.body.password,
+                    Erro: err 
+                }
+            )
+        }
     }
     
     /**
@@ -41,7 +93,21 @@ module.exports = app => {
     * @param {request} req 
     * @param {response} res 
     */
-    const destroy = (req, res) => {
+    const destroy = async (req, res) => {
+
+        try{
+            const Login = await app.src.services.LoginService.valideDestroy(req.params.id) 
+
+            res.send(Login)
+        }catch(err){
+            //Se houver algum erro, retorna o objeto com a mensagem de erro
+            return res.status(400).send(
+                {
+                    status: 400,
+                    Erro: err 
+                }
+            )
+        }
 
     }
 
