@@ -7,7 +7,7 @@ module.exports = app => {
      * Valida os dados que serão inseridos
      * @param {Valor que será validado} value 
      */
-    const valideStore = async (value) => {
+    const store = async (value) => {
         
         try{
             
@@ -27,7 +27,10 @@ module.exports = app => {
         }catch(err){
             //Se houver algum dado incorreto, lança exceção para o controller
             //com a mensagem de erro ja tratada.
-            throw err
+            throw {
+                erro: err,
+                status:400
+            }
         }
 
     }
@@ -36,7 +39,7 @@ module.exports = app => {
      * Valida os dados que serão deletados
      * @param {Valor que será validado} value 
      */
-    const valideDestroy = async (value) => {
+    const destroy = async (value) => {
 
         try{
             //Delete a empresa
@@ -51,7 +54,10 @@ module.exports = app => {
             
             return rowsDeleted
         }catch(err){
-            throw err
+            throw {
+                erro: err,
+                status:400
+            }
         }
 
     }
@@ -60,7 +66,7 @@ module.exports = app => {
      * Valida os dados que serão alterados
      * @param {Valor que será validado} value 
      */
-    const valideUpdate = async (value) => {
+    const update = async (value) => {
 
         try{
             //Verifica se o objeto passado esta correto
@@ -84,7 +90,10 @@ module.exports = app => {
             })
 
         }catch(err){
-            throw err
+            throw {
+                erro: err,
+                status:400
+            }
         }
     }
 
@@ -92,22 +101,23 @@ module.exports = app => {
     * Valida os dados que serão retornados
     * @param {Valor que será validado} value 
     */
-    const valideIndex = async () => {
-
+    const index = async () => {
         try{
            //Retorna todos as empresas
            return User.findAll()
         }catch(err){
-            throw err
+            throw {
+                erro: err,
+                status:400
+            }
         }
-
     }
 
     /**
     * Valida os dados que serão retornados
     * @param {Valor que será validado} value 
     */
-   const valideShow = async (value) => {
+   const show = async (value) => {
         try{
             //Retorna todos as empresas
             return User.findAll({
@@ -116,9 +126,12 @@ module.exports = app => {
                 }
             })
         }catch(err){
-            throw err
+            throw {
+                erro: err,
+                status: 400
+            }
         }
     }
 
-    return {valideStore, valideDestroy, valideShow, valideIndex, valideUpdate}
+    return {store, destroy, show, index, update}
 }

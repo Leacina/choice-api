@@ -1,12 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-    const Table = sequelize.define('Table',{
+    const Segment = sequelize.define('Segment',{
         name: DataTypes.STRING,
-        active: DataTypes.BOOLEAN,
-        id_company: DataTypes.INTEGER,
     },{
         //Adicionado para gerar a tabela no singular
         freezeTableName: true,
     });
 
-    return Table
+    return Segment
 }

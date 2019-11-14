@@ -3,40 +3,28 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
     /*
-      Criação da tabela company.
+      Criação da tabela Command.
     */
-    return queryInterface.createTable('User', {
+    return queryInterface.createTable('Service', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      name: {
+      startAt: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.DATE,
       },
-      cell_phone: {
+      finishAt: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
       },
-      is_admin: {
-        allowNull: false,
-        type: DataTypes.BOOLEAN
-      },
-      id_establishment:{
+      id_table: {
         allowNull:false,
         type:DataTypes.INTEGER,
         references: {        
-          model: 'Company',
-          key: 'id'
-        }
-      },
-      id_login:{
-        allowNull:false,
-        type:DataTypes.INTEGER,
-        references: {        
-          model: 'Login',
+          model: 'Table',
           key: 'id'
         }
       },
@@ -53,8 +41,8 @@ module.exports = {
 
   down: (queryInterface) => {
     /*
-      Drop da tabela company para retornar ao inicio.
+      Drop da tabela Command para retornar ao inicio.
     */
-    return queryInterface.dropTable('User');
+    return queryInterface.dropTable('Service');
   }
 };

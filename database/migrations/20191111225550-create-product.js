@@ -3,23 +3,38 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
     /*
-      Criação da tabela login.
+      Criação da tabela Pizza.
     */
-    return queryInterface.createTable('Login', {
+    return queryInterface.createTable('Product', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      email: {
+      ingredients: {
         allowNull: false,
         type: DataTypes.STRING,
-        unique: true,
       },
-      password: {
+      description: {
         allowNull: false,
         type: DataTypes.STRING,
+      },
+      image: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      active: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+      },
+      id_company:{
+        allowNull:false,
+        type:DataTypes.INTEGER,
+        references: {        
+          model: 'Company',
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
@@ -34,8 +49,8 @@ module.exports = {
 
   down: (queryInterface) => {
     /*
-      Drop da tabela login para retornar ao inicio.
+      Drop da tabela Pizza para retornar ao inicio.
     */
-    return queryInterface.dropTable('Login');
+    return queryInterface.dropTable('Product');
   }
 };

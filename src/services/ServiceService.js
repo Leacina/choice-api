@@ -7,7 +7,7 @@ module.exports = app => {
      * Valida os dados que serão inseridos
      * @param {Valor que será validado} value 
      */
-    const valideStore = async (value) => {
+    const store = async (value) => {
         
         try{
             
@@ -15,7 +15,7 @@ module.exports = app => {
             existsOrError(value,'Formato dos dados invalido')
 
             //Verifica se possui todos os dados foram passados
-            existsOrError(value.id_caster_has_table,'Número referente a mesa nçao informado.')
+            existsOrError(value.id_caster_has_table,'Número referente a mesa não informado.')
 
             //Insere o dado no banco de dados, caso de algum problema, lança uma exceção
             return Command.create(value)
@@ -32,7 +32,7 @@ module.exports = app => {
      * Valida os dados que serão deletados
      * @param {Valor que será validado} value 
      */
-    const valideDestroy = async (value) => {
+    const destroy = async (value) => {
 
         try{
             //Delete a empresa
@@ -56,7 +56,7 @@ module.exports = app => {
      * Valida os dados que serão alterados
      * @param {Valor que será validado} value 
      */
-    const valideUpdate = async (value) => {
+    const update = async (value) => {
 
         try{
             //Verifica se o objeto passado esta correto
@@ -86,7 +86,7 @@ module.exports = app => {
     * Valida os dados que serão retornados
     * @param {Valor que será validado} value 
     */
-    const valideIndex = async () => {
+    const index = async () => {
 
         try{
            //Retorna todos as empresas
@@ -101,7 +101,7 @@ module.exports = app => {
     * Valida os dados que serão retornados
     * @param {Valor que será validado} value 
     */
-   const valideShow = async (value) => {
+   const show = async (value) => {
         try{
             //Retorna todos as empresas
             return Command.findAll({
@@ -114,5 +114,5 @@ module.exports = app => {
         }
     }
 
-    return {valideStore, valideDestroy, valideShow, valideIndex, valideUpdate}
+    return {store, destroy, show, index, update}
 }

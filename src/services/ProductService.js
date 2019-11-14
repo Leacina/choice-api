@@ -1,4 +1,4 @@
-const { Tablet } = require('../models');
+const { Pizza } = require('../models');
 
 module.exports = app => {
     const {existsOrError} = app.src.services.ValidationService;
@@ -7,19 +7,20 @@ module.exports = app => {
      * Valida os dados que serão inseridos
      * @param {Valor que será validado} value 
      */
-    const valideStore = async (value) => {
+    const store = async (value) => {
         
         try{
+            
             //Verifica se o objeto passado esta correto
             existsOrError(value,'Formato dos dados invalido')
 
             //Verifica se possui todos os dados foram passados
-            existsOrError(value.name,'Nome não foi informado.')
-            existsOrError(value.code,'Codigo não foi informado.')
-            existsOrError(value.id_table,'Mesa não informada.')
- 
+            existsOrError(value.flavor,'Sabor da pizza não foi informado')
+            existsOrError(value.ingredients,'Ingrediente da pizza não foi informado')
+            existsOrError(value.available,'Campo informando se a pizza esta disponivel não foi informado')
+            existsOrError(value.id_establishment,'Id correspondente a empresa não foi informado')
             //Insere o dado no banco de dados, caso de algum problema, lança uma exceção
-            return Tablet.create(value)
+            return Pizza.create(value)
            
         }catch(err){
             //Se houver algum dado incorreto, lança exceção para o controller
@@ -33,18 +34,18 @@ module.exports = app => {
      * Valida os dados que serão deletados
      * @param {Valor que será validado} value 
      */
-    const valideDestroy = async (value) => {
+    const destroy = async (value) => {
 
         try{
             //Delete a empresa
-            const rowsDeleted = Tablet.destroy({
+            const rowsDeleted = Pizza.destroy({
                 where:{
                     id: value
                 }
             })
           
             //Caso não encontrar a empresa, gera uma exceção
-            existsOrError(rowsDeleted, 'Tablet não foi encontrada.')
+            existsOrError(rowsDeleted, 'Pizza não foi encontrada.')
             
             return rowsDeleted
         }catch(err){
@@ -57,23 +58,22 @@ module.exports = app => {
      * Valida os dados que serão alterados
      * @param {Valor que será validado} value 
      */
-    const valideUpdate = async (value) => {
+    const update = async (value) => {
 
         try{
             //Verifica se o objeto passado esta correto
             existsOrError(value,'Formato dos dados invalido')
 
             //Verifica se possui todos os dados foram passados
-            existsOrError(value.name,'Nome não foi informado.')
-            existsOrError(value.code,'Codigo não foi informado.')
-            existsOrError(value.id_table,'Mesa não informada.')
+            existsOrError(value.flavor,'ID da pizza não foi informado')
 
             //Update nos dados de acordo com o id
-            Tablet.update({ 
-                                name: value.name,
-                                code: value.code,
-                                is_active: value.is_active,
-                                id_table:  value.id_table,
+            Pizza.update({ 
+                                flavor: value.flavor,
+                                ingredients: value.ingredients,
+                                url: value.url,
+                                available:  value.available,
+                                id_establishment: value.id_establishment,
                            }, 
             {
                 where: {
@@ -90,11 +90,11 @@ module.exports = app => {
     * Valida os dados que serão retornados
     * @param {Valor que será validado} value 
     */
-    const valideIndex = async () => {
+    const index = async () => {
 
         try{
            //Retorna todos as empresas
-           return Tablet.findAll()
+           return Pizza.findAll()
         }catch(err){
             throw err
         }
@@ -105,10 +105,10 @@ module.exports = app => {
     * Valida os dados que serão retornados
     * @param {Valor que será validado} value 
     */
-   const valideShow = async (value) => {
+   const show = async (value) => {
         try{
             //Retorna todos as empresas
-            return Tablet.findAll({
+            return Pizza.findAll({
                 where:{
                     id:value
                 }
@@ -118,5 +118,5 @@ module.exports = app => {
         }
     }
 
-    return {valideStore, valideDestroy, valideShow, valideIndex, valideUpdate}
+    return {store, destroy, show, index, update}
 }

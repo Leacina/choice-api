@@ -1,6 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
-    const Table = sequelize.define('Table',{
-        name: DataTypes.STRING,
+    const Produtc = sequelize.define('Pizza',{
+        ingredients: DataTypes.STRING,
+        description: DataTypes.STRING,
+        image: DataTypes.STRING,
         active: DataTypes.BOOLEAN,
         id_company: DataTypes.INTEGER,
     },{
@@ -8,5 +10,5 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true,
     });
 
-    return Table
+    return Produtc
 }

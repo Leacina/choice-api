@@ -3,28 +3,28 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
     /*
-      Criação da tabela Command.
+      Criação da tabela Pizza.
     */
-    return queryInterface.createTable('Command', {
+    return queryInterface.createTable('Table', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      is_ativo: {
+      name: {
         allowNull: false,
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.STRING
       },
-      start_date: {
+      active: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.BOOLEAN
       },
-      id_caster_has_table: {
+      id_company:{
         allowNull:false,
         type:DataTypes.INTEGER,
         references: {        
-          model: 'Caster_Has_Table',
+          model: 'Company',
           key: 'id'
         }
       },
@@ -41,8 +41,8 @@ module.exports = {
 
   down: (queryInterface) => {
     /*
-      Drop da tabela Command para retornar ao inicio.
+      Drop da tabela Pizza para retornar ao inicio.
     */
-    return queryInterface.dropTable('Command');
+    return queryInterface.dropTable('Table');
   }
 };

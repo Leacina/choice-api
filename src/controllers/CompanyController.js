@@ -7,7 +7,7 @@ module.exports = app => {
      */
     const index = async (req, res) => {
         try{
-            const Companies = await app.src.services.CompanyService.valideIndex()
+            const Companies = await app.src.services.CompanyService.index()
 
             res.send(Companies)
         }catch(err){
@@ -24,7 +24,7 @@ module.exports = app => {
      */
     const show = async (req, res) => {
         try{
-            const Company = await app.src.services.CompanyService.valideShow(req.params.id)
+            const Company = await app.src.services.CompanyService.show(req.params.id)
 
             res.send(Company)
         }catch(err){
@@ -43,7 +43,7 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const Company = await app.src.services.CompanyService.valideStore(req.body)
+            const Company = await app.src.services.CompanyService.store(req.body)
 
             //Retorna o json com status de sucesso para o usuário
             return res.send(Company)
@@ -71,7 +71,7 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const Company = await app.src.services.CompanyService.valideUpdate(req.body)
+            const Company = await app.src.services.CompanyService.update(req.body)
 
             //Retorna o json com status de sucesso para o usuário
             return res.send(Company)
@@ -98,7 +98,7 @@ module.exports = app => {
     const destroy = async (req, res) => {
 
         try{
-            const Company = await app.src.services.CompanyService.valideDestroy(req.params.id) 
+            const Company = await app.src.services.CompanyService.destroy(req.params.id) 
 
             res.send(Company)
         }catch(err){

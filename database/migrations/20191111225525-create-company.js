@@ -3,9 +3,9 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
     /*
-      Criação da tabela Pizza.
+      Criação da tabela company.
     */
-    return queryInterface.createTable('Tablet', {
+    return queryInterface.createTable('Company', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,19 +16,23 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING
       },
-      code: {
+      cnpj: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      is_active: {
+      phone: {
         allowNull: false,
-        type: DataTypes.BOOLEAN
+        type: DataTypes.STRING,
       },
-      id_table:{
+      active: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+      },
+      id_segment: {
         allowNull:false,
         type:DataTypes.INTEGER,
         references: {        
-          model: 'Table',
+          model: 'Segment',
           key: 'id'
         }
       },
@@ -45,8 +49,8 @@ module.exports = {
 
   down: (queryInterface) => {
     /*
-      Drop da tabela Pizza para retornar ao inicio.
+      Drop da tabela company para retornar ao inicio.
     */
-    return queryInterface.dropTable('Tablet');
+    return queryInterface.dropTable('Company');
   }
 };

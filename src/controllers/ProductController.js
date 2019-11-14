@@ -7,9 +7,9 @@ module.exports = app => {
      */
     const index = async (req, res) => {
         try{
-            const PizzaCasters = await app.src.services.PizzaCasterService.valideIndex()
+            const Pizzas = await app.src.services.PizzaService.index()
 
-            res.send(PizzaCasters)
+            res.send(Pizzas)
         }catch(err){
             res.status(400).send({
                 erro:err
@@ -24,9 +24,9 @@ module.exports = app => {
      */
     const show = async (req, res) => {
         try{
-            const PizzaCaster = await app.src.services.PizzaCasterService.valideShow(req.params.id)
+            const Pizza = await app.src.services.PizzaService.show(req.params.id)
 
-            res.send(PizzaCaster)
+            res.send(Pizza)
         }catch(err){
             res.status(400).send({
                 erro:err
@@ -43,19 +43,20 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const PizzaCaster = await app.src.services.PizzaCasterService.valideStore(req.body)
+            const Pizza = await app.src.services.PizzaService.store(req.body)
 
             //Retorna o json com status de sucesso para o usuário
-            return res.send(PizzaCaster)
+            return res.send(Pizza)
 
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
             return res.status(400).send(
                 {
                     status: 400,
-                    name: req.body.name,
-                    create_date: req.body.create_date,
-                    is_active: req.body.is_active,
+                    flavor: req.body.flavor,
+                    ingredients: req.body.ingredients,
+                    url: req.body.url,
+                    available: req.body.available,
                     id_establishment: req.body.id_establishment,
                     Erro: err 
                 }
@@ -72,19 +73,20 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const PizzaCaster = await app.src.services.PizzaCasterService.valideUpdate(req.body)
+            const Pizza = await app.src.services.PizzaService.update(req.body)
 
             //Retorna o json com status de sucesso para o usuário
-            return res.send(PizzaCaster)
+            return res.send(Pizza)
 
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
             return res.status(400).send(
                 {
                     status: 400,
-                    name: req.body.name,
-                    create_date: req.body.create_date,
-                    is_active: req.body.is_active,
+                    flavor: req.body.flavor,
+                    ingredients: req.body.ingredients,
+                    url: req.body.url,
+                    available: req.body.available,
                     id_establishment: req.body.id_establishment,
                     Erro: err 
                 }
@@ -100,9 +102,9 @@ module.exports = app => {
     const destroy = async (req, res) => {
 
         try{
-            const PizzaCaster = await app.src.services.PizzaCasterService.valideDestroy(req.params.id) 
+            const Pizza = await app.src.services.PizzaService.destroy(req.params.id) 
 
-            res.send(PizzaCaster)
+            res.send(Pizza)
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
             return res.status(400).send(

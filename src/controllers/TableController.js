@@ -7,12 +7,12 @@ module.exports = app => {
      */
     const index = async (req, res) => {
         try{
-            const Tables = await app.src.services.TableService.valideIndex()
+            const Tables = await app.src.services.TableService.index(req.query, req.headers)
 
             res.send(Tables)
         }catch(err){
-            res.status(400).send({
-                erro:err
+            res.status(err.status || 400).send({
+                details:err
             })
         }
     }
@@ -24,12 +24,12 @@ module.exports = app => {
      */
     const show = async (req, res) => {
         try{
-            const Table = await app.src.services.TableService.valideShow(req.params.id)
+            const Table = await app.src.services.TableService.show(req.params.id, req.query, req.headers)
 
             res.send(Table)
         }catch(err){
-            res.status(400).send({
-                erro:err
+            res.status(err.status || 400).send({
+                details:err
             })
         }
     }
@@ -43,21 +43,20 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const Table = await app.src.services.TableService.valideStore(req.body)
+            const Table = await app.src.services.TableService.store(req.body, req.headers)
 
             //Retorna o json com status de sucesso para o usuário
             return res.send(Table)
 
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
+                    status: err.status || 400,
                     name: req.body.name,
-                    code: req.body.code,
-                    is_active: req.body.is_active,
-                    id_establishment: req.body.id_establishment,
-                    Erro: err 
+                    active: req.body.active,
+                    id_company: req.body.id_company,
+                    details: err 
                 }
             )
         }
@@ -72,21 +71,20 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const Table = await app.src.services.TableService.valideUpdate(req.body)
+            const Table = await app.src.services.TableService.update(req.body, req.headers, req.params)
 
             //Retorna o json com status de sucesso para o usuário
             return res.send(Table)
 
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
+                    status: err.status || 400,
                     name: req.body.name,
-                    code: req.body.code,
-                    is_active: req.body.is_active,
-                    id_establishment: req.body.id_establishment,
-                    Erro: err 
+                    active: req.body.active,
+                    id_company: req.body.id_company,
+                    details: err 
                 }
             )
         }
@@ -100,15 +98,15 @@ module.exports = app => {
     const destroy = async (req, res) => {
 
         try{
-            const Table = await app.src.services.TableService.valideDestroy(req.params.id) 
+            const Table = await app.src.services.TableService.destroy(req.params.id, req.headers) 
 
             res.send(Table)
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
-                    Erro: err 
+                    status: err.status || 400,
+                    details: err 
                 }
             )
         }

@@ -3,32 +3,28 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
     /*
-      Criação da tabela Pizza.
+      Criação da tabela Pizza-Decline.
     */
-    return queryInterface.createTable('Table', {
+    return queryInterface.createTable('Pizza_Decline', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      name: {
-        allowNull: false,
-        type: DataTypes.STRING
-      },
-      code: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      is_active: {
-        allowNull: false,
-        type: DataTypes.BOOLEAN
-      },
-      id_establishment:{
+      id_service:{
         allowNull:false,
         type:DataTypes.INTEGER,
         references: {        
-          model: 'Company',
+          model: 'Service',
+          key: 'id'
+        }
+      },
+      id_pizza: {
+        allowNull:false,
+        type:DataTypes.INTEGER,
+        references: {        
+          model: 'Product',
           key: 'id'
         }
       },
@@ -45,8 +41,8 @@ module.exports = {
 
   down: (queryInterface) => {
     /*
-      Drop da tabela Pizza para retornar ao inicio.
+      Drop da tabela Pizza-Decline para retornar ao inicio.
     */
-    return queryInterface.dropTable('Table');
+    return queryInterface.dropTable('Pizza_Decline');
   }
 };

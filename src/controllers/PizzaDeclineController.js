@@ -7,7 +7,7 @@ module.exports = app => {
      */
     const index = async (req, res) => {
         try{
-            const PizzaDeclines = await app.src.services.PizzaDeclineService.valideIndex()
+            const PizzaDeclines = await app.src.services.PizzaDeclineService.index()
 
             res.send(PizzaDeclines)
         }catch(err){
@@ -24,7 +24,7 @@ module.exports = app => {
      */
     const show = async (req, res) => {
         try{
-            const PizzaDecline = await app.src.services.PizzaDeclineService.valideShow(req.params.id)
+            const PizzaDecline = await app.src.services.PizzaDeclineService.show(req.params.id)
 
             res.send(PizzaDecline)
         }catch(err){
@@ -43,7 +43,7 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const PizzaDecline = await app.src.services.PizzaDeclineService.valideStore(req.body)
+            const PizzaDecline = await app.src.services.PizzaDeclineService.store(req.body)
 
             //Retorna o json com status de sucesso para o usuário
             return res.send(PizzaDecline)
@@ -70,7 +70,7 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const PizzaDecline = await app.src.services.PizzaDeclineService.valideUpdate(req.body)
+            const PizzaDecline = await app.src.services.PizzaDeclineService.update(req.body)
 
             //Retorna o json com status de sucesso para o usuário
             return res.send(PizzaDecline)
@@ -96,7 +96,7 @@ module.exports = app => {
     const destroy = async (req, res) => {
 
         try{
-            const PizzaDecline = await app.src.services.PizzaDeclineService.valideDestroy(req.params.id) 
+            const PizzaDecline = await app.src.services.PizzaDeclineService.destroy(req.params.id) 
 
             res.send(PizzaDecline)
         }catch(err){
