@@ -162,11 +162,11 @@ module.exports = app => {
             let _order = [];
        
             //Percorre todos os 'order'
-            for (let i = 0; i < order.length - 1; i++) {
+            for (let i = 0; i < orderArray.length - 1; i++) {
                 //Acumulador do order by
                 _order[i] = [(sortArray[i] || 'id'), (orderArray[i] || 'ASC')]
             }
-           
+         
             //Retorna todos as empresas
             const items = await Product.findAll({
                 where: {
@@ -179,7 +179,7 @@ module.exports = app => {
                 offset: ((parseInt(page) - 1) * limit) || null,
                 order: _order
             })
-         
+         throw 'teste'
             //TODO: Uma gambi provisória... Ajustar modo para poderem utilizar o expand
             //Tentar utilizar isso no proprio sequelize
             var _items = [];

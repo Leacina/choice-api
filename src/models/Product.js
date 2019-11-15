@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Produtc = sequelize.define('Pizza',{
+    const Product = sequelize.define('Product',{
         name: DataTypes.STRING,
         ingredients: DataTypes.STRING,
         description: DataTypes.STRING,
@@ -11,5 +11,5 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true,
     });
 
-    return Produtc
+    return Product
 }

@@ -13,7 +13,7 @@ module.exports = app => {
     const store = async (body, headers) => {
         
         try{
-            const {name, id_company} = body
+            const {name} = body
             const active = body.active == null ? false : body.active
 
             //Verifica se o objeto passado esta correto
@@ -141,7 +141,7 @@ module.exports = app => {
             const { sort, order, page, limit, search } = query
         
             const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
-
+            
             //Utilizado nos filtros
             const Op = Sequelize.Op
 
@@ -151,13 +151,23 @@ module.exports = app => {
         
             //Variavel para armezar o array de order e sort
             let _order = [];
-        
+           
             //Percorre todos os 'order'
-            for (let i = 0; i < order.length - 1; i++) { 
+            for (let i = 0; i < (orderArray.length || 0) - 1; i++) { 
                 //Acumulador do order by
                 _order[i] = [(sortArray[i] || 'id'), (orderArray[i] || 'ASC')]
             }
            
+            //Retorna todos as empresas
+            const itemsTotal = await Table.findAll({
+                where: {
+                            id_company: _token.id_company,
+                            name: {
+                                [Op.like]: `%${search || ''}%`
+                            }
+                },
+            })
+
             //Retorna todos as empresas
             const items = await Table.findAll({
                 where: {
@@ -170,7 +180,7 @@ module.exports = app => {
                 offset: ((parseInt(page) - 1) * limit) || null,
                 order: _order
             })
-          
+         
             //TODO: Uma gambi provisória... Ajustar modo para poderem utilizar o expand
             //Tentar utilizar isso no proprio sequelize
             var _items = [];
@@ -208,7 +218,7 @@ module.exports = app => {
                 items: _items,
                 page,
                 limit,
-                total: _items.length
+                total: itemsTotal.length
             }
         }catch(err){
             throw err 
