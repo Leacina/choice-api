@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
         cnpj: DataTypes.STRING,
         phone: DataTypes.STRING,
         active: DataTypes.STRING,
-        id_segment: DataTypes.STRING,
+        id_segment: DataTypes.INTEGER,
     },{
         //Adicionado para gerar a tabela no singular
         freezeTableName: true,

@@ -12,6 +12,10 @@ module.exports = {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
+      name: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
       ingredients: {
         allowNull: false,
         type: DataTypes.STRING,

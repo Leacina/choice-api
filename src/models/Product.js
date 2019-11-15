@@ -1,5 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Produtc = sequelize.define('Pizza',{
+        name: DataTypes.STRING,
         ingredients: DataTypes.STRING,
         description: DataTypes.STRING,
         image: DataTypes.STRING,
