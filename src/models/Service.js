@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Command = sequelize.define('Command',{
+    const Service = sequelize.define('Service',{
         startAt: DataTypes.DATE,
         finishAt: DataTypes.DATE,
         id_table: DataTypes.INTEGER,
@@ -8,5 +8,5 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true,
     });
 
-    return Command
+    return Service
 }

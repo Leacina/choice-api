@@ -5,7 +5,7 @@ module.exports = {
     /*
       Criação da tabela Pizza-Decline.
     */
-    return queryInterface.createTable('Pizza_Decline', {
+    return queryInterface.createTable('Product_Decline', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -43,6 +43,6 @@ module.exports = {
     /*
       Drop da tabela Pizza-Decline para retornar ao inicio.
     */
-    return queryInterface.dropTable('Pizza_Decline');
+    return queryInterface.dropTable('Product_Decline');
   }
 };

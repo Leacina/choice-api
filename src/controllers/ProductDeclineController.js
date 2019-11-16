@@ -7,12 +7,12 @@ module.exports = app => {
      */
     const index = async (req, res) => {
         try{
-            const PizzaDeclines = await app.src.services.PizzaDeclineService.index()
+            const Declines = await app.src.services.ProductDeclineService.index(req.query, req.headers)
 
-            res.send(PizzaDeclines)
+            res.send(Declines)
         }catch(err){
-            res.status(400).send({
-                erro:err
+            res.status(err.status || 400).send({
+                details:err
             })
         }
     }
@@ -24,12 +24,12 @@ module.exports = app => {
      */
     const show = async (req, res) => {
         try{
-            const PizzaDecline = await app.src.services.PizzaDeclineService.show(req.params.id)
+            const Decline = await app.src.services.ProductDeclineService.show(req.params.id, req.query, req.headers)
 
-            res.send(PizzaDecline)
+            res.send(Decline)
         }catch(err){
-            res.status(400).send({
-                erro:err
+            res.status(err.status || 400).send({
+                details:err
             })
         }
     }
@@ -43,19 +43,19 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const PizzaDecline = await app.src.services.PizzaDeclineService.store(req.body)
+            const Decline = await app.src.services.ProductDeclineService.store(req.body, req.headers)
 
             //Retorna o json com status de sucesso para o usuário
-            return res.send(PizzaDecline)
+            return res.send(Decline)
 
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
-                    id_command: req.body.id_command,
+                    status: err.status || 400,
                     id_pizza: req.body.id_pizza,
-                    Erro: err 
+                    id_service: req.body.id_service,
+                    details: err 
                 }
             )
         }
@@ -70,19 +70,19 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const PizzaDecline = await app.src.services.PizzaDeclineService.update(req.body)
+            const Decline = await app.src.services.ProductDeclineService.update(req.body, req.headers, req.params)
 
             //Retorna o json com status de sucesso para o usuário
-            return res.send(PizzaDecline)
+            return res.send(Decline)
 
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
-                    id_command: req.body.id_command,
+                    status: err.status || 400,
                     id_pizza: req.body.id_pizza,
-                    Erro: err 
+                    id_service: req.body.id_service,
+                    details: err 
                 }
             )
         }
@@ -96,15 +96,15 @@ module.exports = app => {
     const destroy = async (req, res) => {
 
         try{
-            const PizzaDecline = await app.src.services.PizzaDeclineService.destroy(req.params.id) 
+            const Decline = await app.src.services.ProductDeclineService.destroy(req.params.id, req.headers) 
 
-            res.send(PizzaDecline)
+            res.send(Decline)
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
-                    Erro: err 
+                    status: err.status || 400,
+                    details: err 
                 }
             )
         }

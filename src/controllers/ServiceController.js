@@ -7,12 +7,12 @@ module.exports = app => {
      */
     const index = async (req, res) => {
         try{
-            const Command = await app.src.services.CommandService.index()
+            const Services = await app.src.services.ServiceService.index(req.query, req.headers)
 
-            res.send(Command)
+            res.send(Services)
         }catch(err){
-            res.status(400).send({
-                erro:err
+            res.status(err.status || 400).send({
+                details:err
             })
         }
     }
@@ -24,12 +24,12 @@ module.exports = app => {
      */
     const show = async (req, res) => {
         try{
-            const Command = await app.src.services.CommandService.show(req.params.id)
+            const Service = await app.src.services.ServiceService.show(req.params.id, req.query, req.headers)
 
-            res.send(Command)
+            res.send(Service)
         }catch(err){
-            res.status(400).send({
-                erro:err
+            res.status(err.status || 400).send({
+                details:err
             })
         }
     }
@@ -43,20 +43,20 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const Command = await app.src.services.CommandService.store(req.body)
+            const Service = await app.src.services.ServiceService.store(req.body, req.headers)
 
             //Retorna o json com status de sucesso para o usuário
-            return res.send(Command)
+            return res.send(Service)
 
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
-                    is_ativo: req.body.is_ativo,
-                    start_date: req.body.start_date,
-                    id_caster_has_table: req.body.id_caster_has_table,
-                    Erro: err 
+                    status: err.status || 400,
+                    startAt: req.body.startAt,
+                    finishAt: req.body.finishAt,
+                    id_table: req.body.id_table,
+                    details: err 
                 }
             )
         }
@@ -71,20 +71,20 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const Command = await app.src.services.CommandService.update(req.body)
+            const Service = await app.src.services.ServiceService.update(req.body, req.headers, req.params)
 
             //Retorna o json com status de sucesso para o usuário
-            return res.send(Command)
+            return res.send(Service)
 
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
-                    is_ativo: req.body.is_ativo,
-                    start_date: req.body.start_date,
-                    id_caster_has_table: req.body.id_caster_has_table,
-                    Erro: err 
+                    status: err.status || 400,
+                    startAt: req.body.startAt,
+                    finishAt: req.body.finishAt,
+                    id_table: req.body.id_table,
+                    details: err 
                 }
             )
         }
@@ -98,18 +98,19 @@ module.exports = app => {
     const destroy = async (req, res) => {
 
         try{
-            const Command = await app.src.services.CommandService.destroy(req.params.id) 
+            const Service = await app.src.services.ServiceService.destroy(req.params.id, req.headers) 
 
-            res.send(Command)
+            res.send(Service)
         }catch(err){
             //Se houver algum erro, retorna o objeto com a mensagem de erro
-            return res.status(400).send(
+            return res.status(err.status || 400).send(
                 {
-                    status: 400,
-                    Erro: err 
+                    status: err.status || 400,
+                    details: err 
                 }
             )
         }
+
     }
 
     return {index, show, store, update, destroy}

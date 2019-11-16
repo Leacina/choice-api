@@ -55,15 +55,15 @@ module.exports = app => {
         .put(app.src.controllers.ServiceController.update)
 
     //Rota para as pizzas 
-    app.route(URL + 'pizzadecline')
+    app.route(URL + 'product-decline')
         .all(app.src.config.passport.authenticate())
-        .post(app.src.controllers.PizzaDeclineController.store)
-        .get(app.src.controllers.PizzaDeclineController.index)
-    app.route(URL + 'pizzadecline/:id')
+        .post(app.src.controllers.ProductDeclineController.store)
+        .get(app.src.controllers.ProductDeclineController.index)
+    app.route(URL + 'product-decline/:id')
         .all(app.src.config.passport.authenticate())
-        .delete(app.src.controllers.PizzaDeclineController.destroy)
-        .get(app.src.controllers.PizzaDeclineController.show)  
-        .put(app.src.controllers.PizzaDeclineController.update) 
+        .delete(app.src.controllers.ProductDeclineController.destroy)
+        .get(app.src.controllers.ProductDeclineController.show)  
+        .put(app.src.controllers.ProductDeclineController.update) 
 
     //Rota para as mesas
     app.route(URL + 'table')

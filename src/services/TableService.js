@@ -95,11 +95,14 @@ module.exports = app => {
 
             //Verifica se possui todos os dados foram passados
             existsOrError(name,'Nome não foi informado')
-        
+            
+            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
+
             //Busca a mesa
             const table = await Table.findOne({
                 where:{
-                    id
+                    id,
+                    id_company: _token.id_company
                 }
             })
 
@@ -110,8 +113,6 @@ module.exports = app => {
                     status:400
                 }
             } 
-
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
 
             //Update nos dados de acordo com o id
             return await Table.update({ 
@@ -151,9 +152,9 @@ module.exports = app => {
         
             //Variavel para armezar o array de order e sort
             let _order = [];
-           
+          
             //Percorre todos os 'order'
-            for (let i = 0; i < (orderArray.length || 0) - 1; i++) { 
+            for (let i = 0; i < (orderArray.length || 0) ; i++) { 
                 //Acumulador do order by
                 _order[i] = [(sortArray[i] || 'id'), (orderArray[i] || 'ASC')]
             }
@@ -167,7 +168,7 @@ module.exports = app => {
                             }
                 },
             })
-
+            
             //Retorna todos as empresas
             const items = await Table.findAll({
                 where: {
@@ -242,6 +243,11 @@ module.exports = app => {
                 }
             })
          
+            if(!table) throw{
+                erro:"Mesa não encontrada!",
+                status:400
+            }
+
             const { id, name, id_company, active, createdAt, updatedAt} = table
           
             //variaveis para controle da query expand

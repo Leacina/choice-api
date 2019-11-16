@@ -1,4 +1,4 @@
-const { Table, Company, Service } = require('../models');
+const { Table, Company, Service, Product_Decline, Product} = require('../models');
 const { authSecret } = require('../.env')
 const jwt = require('jwt-simple')
 const Sequelize = require('sequelize')
@@ -13,50 +13,76 @@ module.exports = app => {
     const store = async (body, headers) => {
         
         try{
-            const {startAt, finishAt, id_table} = body
-    
+            const {id_pizza, id_service} = body
+            const is_available =  body.is_available == null ? false : body.is_available
+
             //Verifica se o objeto passado esta correto
             existsOrError(body,'Formato dos dados invalido')
 
             //Verifica se possui todos os dados foram passados
-            existsOrError(id_table,'Mesa não foi informada')
+            existsOrError(id_pizza,'Pizza não foi informada')
+            existsOrError(id_service,'Serviço não foi informado')
 
             const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
 
             //Busca a mesa caso ja exista
-            const service = await Service.findOne({
+            const decline = await Product_Decline.findOne({
                 where: {
-                    id_table,
-                    finishAt: null
+                    id_pizza,
+                    id_service
                 }
             });
 
-            //Se existir... Lança exceção
-            if (service) {
-                throw {
-                    erro: 'Essa mesa já possui um serviço!',
-                    status: 400
-                };
-            }
-  
-            const table = await Table.findOne({
+            const product = await Product.findOne({
                 where:{
-                    id: id_table
+                    id:id_pizza,
+                    id_company: _token.id_company
                 }
             })
-          
-            if(table.id_company != _token.id_company){
+
+            if(!product) throw {erro:'Produto não encontrado!', status: 400}
+
+            const service = await Service.findOne({
+                where:{
+                    id: id_service
+                }
+            })
+
+            if(!service) throw{ erro:"Serviço não encontrado!", status:400}
+
+            const table = await Table.findOne({
+                where:{
+                    id: service.id_table
+                }
+            })
+     
+            if(!table || (table.id_company != _token.id_company)){
                 throw {
                     erro:"Mesa não encontrada!",
                     status:400
                 }
             }
-
+         
+            //Se existir... Faz update
+            if (decline) {
+                return await Product_Decline.update({
+                    id_pizza,
+                    id_service,
+                    is_available
+                },{
+                    where:{
+                            id_pizza,
+                            id_service 
+                        }
+                    }
+                )
+            }
+            
             //Insere o dado no banco de dados, caso de algum problema, lança uma exceção
-            return Service.create({
-                    startAt: startAt || new Date(),
-                    finishAt,
-                    id_table
+            return Product_Decline.create({
+                id_pizza,
+                id_service,
+                is_available
             })
            
         }catch(err){
@@ -74,17 +100,17 @@ module.exports = app => {
     const destroy = async (id, headers) => {
 
         try{
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
+            //const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
 
             //Delete a empresa
-            const rowsDeleted = await Service.destroy({
+            const rowsDeleted = await Product_Decline.destroy({
                 where:{
                     id,
                 }
             })
           
             //Caso não encontrar a empresa, gera uma exceção
-            existsOrError(rowsDeleted, 'Serviço não foi encontrado.')
+            existsOrError(rowsDeleted, 'Dado não encontrado.')
             
         }catch(err){
             throw err 
@@ -135,7 +161,7 @@ module.exports = app => {
             }
 
             //Update nos dados de acordo com o id
-            return await Service.update({ 
+            return await Product_Decline.update({ 
                                 startAt,
                                 finishAt,
                                 id_table
@@ -178,30 +204,37 @@ module.exports = app => {
                 //Acumulador do order by
                 _order[i] = [(sortArray[i] || 'id'), (orderArray[i] || 'ASC')]
             }
-           
+         
             //Retorna todos as empresas
-            const itemsTotal = await Service.findAll({
+            const itemsTotal = await Product_Decline.findAll({
                 where: {
+                        is_available:  false,
                         [Op.or]: [
                         {
-                            id_table: {
+                            id_pizza: {
                                 [Op.like]: `%${search || ''}%`
+                            },
+                            id_service: {
+                                [Op.like]: `%${search || ''}%` 
                             }
                         },
                     ]
                 },
             })
-
+          
             //Retorna todos as empresas
-            const items = await Service.findAll({
+            const items = await Product_Decline.findAll({
                 where: {
+                        is_available:  false,
                         [Op.or]: [
                             {
-                                id_table: {
+                                id_pizza: {
                                     [Op.like]: `%${search || ''}%`
+                                },
+                                id_service: {
+                                    [Op.like]: `%${search || ''}%` 
                                 }
                             },
-                           
                         ]
                 },
                 limit: parseInt(limit) || null,
@@ -213,33 +246,41 @@ module.exports = app => {
             //Tentar utilizar isso no proprio sequelize
             var _items = [];
             for(let i = 0; i < items.length ; i++){
-                const { id, startAt, finishAt, id_table, createdAt, updatedAt} = items[i]
+                const { id, id_pizza, id_service, createdAt, updatedAt} = items[i]
               
                 //variaveis para controle da query expand
                 var {expand} = query
-                var objectService;
+                var objectService, objectProduct;
                
                 //Monta o Objeto professor de acordo com o expand passado na query
                 if(expand){
                     expand = expand.split(',')
 
                     //Se possuir expand para company, busca o cara
-                    if(expand.indexOf('table') > -1){
-                        objectService = await Table.findOne({
+                    if(expand.indexOf('service') > -1){
+                        objectService = await Service.findOne({
                             where:{
-                                id : id_table
+                                id : id_service
+                            }
+                        })
+                    }
+                    
+                    if(expand.indexOf('pizza') > -1){
+                        objectProduct = await Product.findOne({
+                            where:{
+                                id : id_pizza
                             }
                         })
                     }
                 }
             
                 _items[i] = { id,
-                    startAt,   
-                    finishAt,    
+                    pizza:
+                        objectProduct ? objectProduct : { id: id_pizza },   
+                    service:
+                        objectService ? objectService : { id: id_service },
                     createdAt,
-                    updatedAt,
-                    table:
-                        objectService ? objectService : { id: id_table }} 
+                    updatedAt}
             };
 
             return {
@@ -263,15 +304,15 @@ module.exports = app => {
             const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
             
             //Retorna todos as empresas
-            const table = await Service.findOne({
+            const table = await Product_Decline.findOne({
                 where:{
-                    id:value,
-                    id_company: _token.id_company
+                    id: value,
+                    is_available:  false,
                 }
             })
          
             if(!table) throw{
-                erro:"Mesa não encontrada!",
+                erro:"Dado não encontrada!",
                 status:400
             }
 
@@ -311,8 +352,8 @@ module.exports = app => {
         }
     }
 
-    function verifyService(value){
-        return true
+    function verifyService(){
+
     }
 
     return {store, destroy, show, index, update}

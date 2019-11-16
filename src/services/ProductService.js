@@ -27,10 +27,11 @@ module.exports = app => {
 
             const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
 
-            //Busca a mesa caso ja exista
+            //Busca o produto caso ja exista
             const product = await Product.findOne({
                 where: {
-                    name
+                    name,
+                    id_company: _token.id_company
                 }
             });
 
@@ -162,11 +163,21 @@ module.exports = app => {
             let _order = [];
        
             //Percorre todos os 'order'
-            for (let i = 0; i < orderArray.length - 1; i++) {
+            for (let i = 0; i < orderArray.length; i++) {
                 //Acumulador do order by
                 _order[i] = [(sortArray[i] || 'id'), (orderArray[i] || 'ASC')]
             }
          
+            //Retorna todos as empresas
+            const itemsTotal = await Product.findAll({
+                where: {
+                            id_company: _token.id_company,
+                            name: {
+                                [Op.like]: `%${search || ''}%`
+                            }
+                },
+            })
+
             //Retorna todos as empresas
             const items = await Product.findAll({
                 where: {
@@ -179,7 +190,7 @@ module.exports = app => {
                 offset: ((parseInt(page) - 1) * limit) || null,
                 order: _order
             })
-         throw 'teste'
+ 
             //TODO: Uma gambi provisória... Ajustar modo para poderem utilizar o expand
             //Tentar utilizar isso no proprio sequelize
             var _items = [];
@@ -220,7 +231,7 @@ module.exports = app => {
                 items: _items,
                 page,
                 limit,
-                total: _items.length
+                total: itemsTotal.length 
             }
         }catch(err){
             throw err
@@ -244,6 +255,11 @@ module.exports = app => {
                 }
             })
          
+            if(!product) throw{
+                erro:"Produto não encontrado!",
+                status:400
+            }
+
             const { id, name, description, image, ingredients, id_company, active, createdAt, updatedAt}  = product
          
             //variaveis para controle da query expand
