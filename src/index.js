@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const consign = require('consign')
-const { Company } = require('./models');
 
 consign()
 .include('./src/config/passport.js')
