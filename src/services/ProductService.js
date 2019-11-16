@@ -80,8 +80,7 @@ module.exports = app => {
          
             //Caso não encontrar a empresa, gera uma exceção
             existsOrError(rowsDeleted, 'Produto não foi encontrado.')
-           
-            return rowsDeleted
+
         }catch(err){
             throw err
         }

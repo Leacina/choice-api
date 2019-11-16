@@ -206,7 +206,7 @@ module.exports = app => {
             }
          
             //Retorna todos as empresas
-            const itemsTotal = await Product_Decline.findAll({
+            const todosItemsTotal = await Product_Decline.findAll({
                 where: {
                         is_available:  false,
                         [Op.or]: [
@@ -221,9 +221,20 @@ module.exports = app => {
                     ]
                 },
             })
+               
+            var itemsTotal = []
+            for(let i = 0; i < todosItemsTotal.length; i++){
+                const product = await Product.findOne({
+                    where:{
+                        id:todosItemsTotal[i].id_pizza
+                    }
+                })
+              
+                if(product.id_company == _token.id_company) itemsTotal[itemsTotal.length] = todosItemsTotal[i]
+            }
           
             //Retorna todos as empresas
-            const items = await Product_Decline.findAll({
+            const todosItems = await Product_Decline.findAll({
                 where: {
                         is_available:  false,
                         [Op.or]: [
@@ -242,6 +253,17 @@ module.exports = app => {
                 order: _order,
             })
          
+            var items = []
+            for(let i = 0; i < todosItems.length; i++){
+                const product = await Product.findOne({
+                    where:{
+                        id:todosItems[i].id_pizza
+                    }
+                })
+              
+                if(product.id_company == _token.id_company) items[items.length] = todosItems[i]
+            }
+
             //TODO: Uma gambi provisória... Ajustar modo para poderem utilizar o expand
             //Tentar utilizar isso no proprio sequelize
             var _items = [];

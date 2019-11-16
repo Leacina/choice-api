@@ -74,7 +74,6 @@ module.exports = app => {
             //Caso não encontrar a empresa, gera uma exceção
             existsOrError(rowsDeleted, 'Mesa não foi encontrada.')
             
-            return rowsDeleted
         }catch(err){
             throw err 
         }

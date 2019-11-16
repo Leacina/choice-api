@@ -2,6 +2,7 @@ const { Table, Company, Service } = require('../models');
 const { authSecret } = require('../.env')
 const jwt = require('jwt-simple')
 const Sequelize = require('sequelize')
+var _token
 
 module.exports = app => {
     const {existsOrError} = app.src.services.ValidationService;
@@ -21,7 +22,7 @@ module.exports = app => {
             //Verifica se possui todos os dados foram passados
             existsOrError(id_table,'Mesa não foi informada')
 
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
+            _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
 
             //Busca a mesa caso ja exista
             const service = await Service.findOne({
@@ -74,7 +75,7 @@ module.exports = app => {
     const destroy = async (id, headers) => {
 
         try{
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
+            _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
 
             //Delete a empresa
             const rowsDeleted = await Service.destroy({
@@ -104,7 +105,7 @@ module.exports = app => {
             //Verifica se o objeto passado esta correto
             existsOrError(body,'Formato dos dados invalido')
             
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
+            _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
 
             //Busca a mesa
             const service = await Service.findOne({
@@ -161,7 +162,7 @@ module.exports = app => {
             //Pega os dados para filtros 
             const { sort, order, page, limit, search } = query
         
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
+            _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
             
             //Utilizado nos filtros
             const Op = Sequelize.Op
@@ -180,7 +181,7 @@ module.exports = app => {
             }
            
             //Retorna todos as empresas
-            const itemsTotal = await Service.findAll({
+            const todosItemsTotal = await Service.findAll({
                 where: {
                         [Op.or]: [
                         {
@@ -192,8 +193,19 @@ module.exports = app => {
                 },
             })
 
+            var itemsTotal = []
+            for(let i = 0; i < todosItemsTotal.length; i++){
+                const table = await Table.findOne({
+                    where:{
+                        id:todosItemsTotal[i].id_table
+                    }
+                })
+              
+                if(table.id_company == _token.id_company) itemsTotal[itemsTotal.length] = todosItemsTotal[i]
+            }
+
             //Retorna todos as empresas
-            const items = await Service.findAll({
+            const todosItems = await Service.findAll({
                 where: {
                         [Op.or]: [
                             {
@@ -208,6 +220,21 @@ module.exports = app => {
                 offset: ((parseInt(page) - 1) * limit) || null,
                 order: _order,
             })
+
+            //Faz o filtro de acordo com a company
+            //TODO: Ajustar para fazer no filter ou no proprio sequelize
+            //Nada perfomatico
+            //const items = todosItems.filter(verifyService)
+            var items = []
+            for(let i = 0; i < todosItems.length; i++){
+                const table = await Table.findOne({
+                    where:{
+                        id:todosItems[i].id_table
+                    }
+                })
+              
+                if(table.id_company == _token.id_company) items[items.length] = todosItems[i]
+            }
          
             //TODO: Uma gambi provisória... Ajustar modo para poderem utilizar o expand
             //Tentar utilizar isso no proprio sequelize
@@ -260,7 +287,7 @@ module.exports = app => {
     */
    const show = async (value, query, headers) => {
         try{   
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
+            _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
             
             //Retorna todos as empresas
             const table = await Service.findOne({
@@ -311,8 +338,15 @@ module.exports = app => {
         }
     }
 
-    function verifyService(value){
-        return true
+    async function verifyService(value){
+   
+        const table = await Table.findOne({
+            where:{
+                id:value.id_table
+            }
+        })
+      
+        return table.id_company == _token.id_company
     }
 
     return {store, destroy, show, index, update}
