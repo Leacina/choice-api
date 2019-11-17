@@ -37,7 +37,7 @@ module.exports = app => {
                 where:{
                     id:id_pizza,
                     id_company: _token.id_company,
-                    active:true
+                   // active:true
                 }
             })
 
@@ -50,20 +50,20 @@ module.exports = app => {
             })
 
             if(!service) throw{ erro:"Serviço não encontrado!", status:400}
-
+/*
             const table = await Table.findOne({
                 where:{
                     id: service.id_table
                 }
             })
-     
+           
             if(!table || (table.id_company != _token.id_company)){
                 throw {
                     erro:"Mesa não encontrada!",
                     status:400
-                }
+                 }
             }
-         
+*/       
             //Se existir... Faz update
             if (decline) {
                 return await Product_Decline.update({

@@ -3,7 +3,6 @@ const { authSecret } = require('../.env')
 const jwt = require('jwt-simple')
 
 module.exports = app => {
-    const {existsOrError} = app.src.services.ValidationService;
 
     /**
      * Valida os dados que serão inseridos
@@ -13,7 +12,7 @@ module.exports = app => {
         
         try{
             const { idTable, idCompany } = params
-            
+    
             const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
        
             if(_token.id_company != idCompany){
@@ -31,14 +30,33 @@ module.exports = app => {
                 }
             })
 
+            const product = await Product.findAll({
+                where:{
+                    id_company: idCompany
+                }
+            })
+        
             if(!service){
                 //Se não possuir um serviço aberto... Retorna somente o service
-                return {
-                    service: await Service.create({
+                service = await Service.create({
                     startAt: new Date(),
                     id_table: idTable
                 })
-            }
+            
+                //TODO : PROVISÓRIO ATÉ VER O ERRO NA BAGAÇA DO LEFT NO SEQUELIZE
+                //Insere todos os produtos
+                for(let i = 0;i < product.length;i++){
+                   
+                    const teste = await Product_Decline.create({
+                        id_pizza: product[i].id,
+                        id_service: service.id,
+                        is_available: true
+                    })
+
+                    console.log(teste.id)
+                }
+
+               // return {service}
             }
 
             const { id, startAt, finishAt, id_table, createdAt, updatedAt}  = service
@@ -72,12 +90,11 @@ module.exports = app => {
             }
 
             //Se possuir um serviço aberto...
-            if(service){
+            if(true){
                 //Procuro todos os produtos que estão marcados como falso
                 const productDecline = await Product_Decline.findAll({
                     where: {
-                        id_service: service.id,
-                        is_available: false
+                        id_service: service.id
                     }
                 })
 
@@ -87,7 +104,7 @@ module.exports = app => {
                 for(let i = 0; i < productDecline.length ; i++){
                     const { id_service, id_pizza, is_available, createdAt, updatedAt} = productDecline[i]
                     const idDecline = productDecline[i].id
-
+                  
                     //variaveis para controle da query expand
                     var {expand} = query
                     var objectService, objectProduct;
@@ -104,14 +121,13 @@ module.exports = app => {
                                 }
                             })
                         }
-                    
-                        objectProduct = await Product.findOne({
-                            where:{
-                                id : id_pizza
-                            }
-                        })
-                        
                     }
+
+                    objectProduct = await Product.findOne({
+                        where:{
+                            id : id_pizza
+                        }
+                    })
                   
                     _items[i] = { 
                             id: idDecline, 
@@ -129,12 +145,6 @@ module.exports = app => {
                     options: _items
                 }
 
-            }else{
-                //Se não possuir um serviço aberto... Retorna somente o service
-                return await Service.create({
-                    startAt: new Date(),
-                    id_table: idTable
-                })
             }
 
         }catch(err){
