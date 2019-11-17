@@ -32,7 +32,8 @@ module.exports = app => {
 
             const product = await Product.findAll({
                 where:{
-                    id_company: idCompany
+                    id_company: idCompany,
+                    active:true
                 }
             })
         
