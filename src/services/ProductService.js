@@ -14,7 +14,7 @@ module.exports = app => {
        
         try{
             const {name, ingredients, description, image} = body
-            const active = body.active == null ? false : body.active
+            const active = body.active == null ? true : body.active
 
             //Verifica se o objeto passado esta correto
             existsOrError(body,'Formato dos dados invalido')
@@ -94,7 +94,7 @@ module.exports = app => {
 
         try{
             const {name, ingredients, description, image} = body
-            const active = body.active == null ? false : body.active
+            const active = body.active == null ? true : body.active
             const { id } = params
             //Verifica se o objeto passado esta correto
             existsOrError(body,'Formato dos dados invalido')

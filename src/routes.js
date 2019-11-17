@@ -76,6 +76,9 @@ module.exports = app => {
         .get(app.src.controllers.TableController.show)  
         .put(app.src.controllers.TableController.update)
 
+    app.route(URL + 'attendance/:idTable/:idCompany')
+        .get(app.src.controllers.AttendanceController.get)
+
     app.route(URL + 'qrcode/:idTable/:idCompany')
         .all(app.src.config.passport.authenticate())
         .get(app.src.controllers.QrCodeController.get)

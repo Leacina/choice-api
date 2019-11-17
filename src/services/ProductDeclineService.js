@@ -36,7 +36,8 @@ module.exports = app => {
             const product = await Product.findOne({
                 where:{
                     id:id_pizza,
-                    id_company: _token.id_company
+                    id_company: _token.id_company,
+                    active:true
                 }
             })
 
