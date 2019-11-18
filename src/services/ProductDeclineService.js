@@ -13,14 +13,14 @@ module.exports = app => {
     const store = async (body, headers) => {
         
         try{
-            const {id_pizza, id_service} = body
+            const {id_product, id_service} = body
             const is_available =  body.is_available == null ? false : body.is_available
 
             //Verifica se o objeto passado esta correto
             existsOrError(body,'Formato dos dados invalido')
 
             //Verifica se possui todos os dados foram passados
-            existsOrError(id_pizza,'Pizza não foi informada')
+            existsOrError(id_product,'Pizza não foi informada')
             existsOrError(id_service,'Serviço não foi informado')
 
             const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
@@ -28,14 +28,14 @@ module.exports = app => {
             //Busca a mesa caso ja exista
             const decline = await Product_Decline.findOne({
                 where: {
-                    id_pizza,
+                    id_pizza: id_product,
                     id_service
                 }
             });
 
             const product = await Product.findOne({
                 where:{
-                    id:id_pizza,
+                    id:id_product,
                     id_company: _token.id_company,
                    // active:true
                 }
@@ -67,12 +67,12 @@ module.exports = app => {
             //Se existir... Faz update
             if (decline) {
                 return await Product_Decline.update({
-                    id_pizza,
+                    id_pizza: id_product,
                     id_service,
                     is_available
                 },{
                     where:{
-                            id_pizza,
+                            id_pizza: id_product,
                             id_service 
                         }
                     }
@@ -81,7 +81,7 @@ module.exports = app => {
             
             //Insere o dado no banco de dados, caso de algum problema, lança uma exceção
             return Product_Decline.create({
-                id_pizza,
+                id_pizza: id_product,
                 id_service,
                 is_available
             })

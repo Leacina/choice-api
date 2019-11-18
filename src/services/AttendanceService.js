@@ -13,15 +13,6 @@ module.exports = app => {
         try{
             const { idTable, idCompany } = params
     
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
-       
-            if(_token.id_company != idCompany){
-                throw{
-                    erro:'Você não pertence a essa empresa',
-                    status:403
-                }
-            }
-
             //Busca se existe algum serviço aberto para esta mesa
             var service = await Service.findOne({
                 where:{
