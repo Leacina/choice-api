@@ -1,3 +1,4 @@
+const { Table } = require('../models');
 const qr = require('qr-image')
 
 module.exports = app => {
@@ -8,8 +9,21 @@ module.exports = app => {
      */
     const get = async (req, res) => {
         try{
+            //TODO: Eu sei que não pode isso no controller...
+            // Vou ajustar...CORRERIAA
+            const table = Table.findOne({
+                where:{
+                    id: idTable
+                }
+            })
+
+            if(!table) throw {
+                erro:"Mesa não encontrada!",
+                status:400
+            }
+
             const url = 'https://choice.app/attendance/'
-            const code = qr.image(url + req.params.idTable + '/' + req.params.idCompany, { type: 'png' })
+            const code = qr.image(url + req.params.idTable, { type: 'png' })
   
             res.type('png')
         

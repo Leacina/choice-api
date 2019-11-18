@@ -10,11 +10,13 @@ module.exports = app => {
      * Valida os dados que serão inseridos
      * @param {Valor que será validado} body
      */
-    const store = async (body, headers) => {
+    const store = async (body, params, headers) => {
         
         try{
             const {id_product, id_service} = body
             const is_available =  body.is_available == null ? false : body.is_available
+
+            const {idTable} = params
 
             //Verifica se o objeto passado esta correto
             existsOrError(body,'Formato dos dados invalido')
@@ -23,7 +25,14 @@ module.exports = app => {
             existsOrError(id_product,'Pizza não foi informada')
             existsOrError(id_service,'Serviço não foi informado')
 
-            const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
+            const table = await Table.findOne({
+                id: idTable
+            })
+
+            if(!table) throw{
+                erro:'Mesa não encontrada',
+                status:400
+            }
 
             //Busca a mesa caso ja exista
             const decline = await Product_Decline.findOne({
@@ -36,8 +45,8 @@ module.exports = app => {
             const product = await Product.findOne({
                 where:{
                     id:id_product,
-                    id_company: _token.id_company,
-                   // active:true
+                    id_company: table.id_company,
+                    //active:true
                 }
             })
 

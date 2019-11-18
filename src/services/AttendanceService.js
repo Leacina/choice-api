@@ -11,7 +11,7 @@ module.exports = app => {
     const get = async (query, params, headers) => {
         
         try{
-            const { idTable, idCompany } = params
+            const { idTable } = params
     
             //Busca se existe algum serviço aberto para esta mesa
             var service = await Service.findOne({
@@ -21,9 +21,20 @@ module.exports = app => {
                 }
             })
 
+            const table = await Table.findOne({
+                where:{
+                    id: idTable
+                }
+            })
+
+            if(!table) throw{
+                erro:"Mesa não encontrada!",
+                status:400
+            }
+
             const product = await Product.findAll({
                 where:{
-                    id_company: idCompany,
+                    id_company: table.id_company,
                     active:true
                 }
             })
@@ -82,61 +93,58 @@ module.exports = app => {
             }
 
             //Se possuir um serviço aberto...
-            if(true){
-                //Procuro todos os produtos que estão marcados como falso
-                const productDecline = await Product_Decline.findAll({
-                    where: {
-                        id_service: service.id
-                    }
-                })
+            //Procuro todos os produtos que estão marcados como falso
+            const productDecline = await Product_Decline.findAll({
+                where: {
+                    id_service: service.id
+                }
+            })
 
-                //TODO: Uma gambi provisória... Ajustar modo para poderem utilizar o expand
-                //Tentar utilizar isso no proprio sequelize
-                var _items = [];
-                for(let i = 0; i < productDecline.length ; i++){
-                    const { id_service, id_pizza, is_available, createdAt, updatedAt} = productDecline[i]
-                    const idDecline = productDecline[i].id
-                  
-                    //variaveis para controle da query expand
-                    var {expand} = query
-                    var objectService, objectProduct;
+            //TODO: Uma gambi provisória... Ajustar modo para poderem utilizar o expand
+            //Tentar utilizar isso no proprio sequelize
+            var _items = [];
+            for(let i = 0; i < productDecline.length ; i++){
+                const { id_service, id_pizza, is_available, createdAt, updatedAt} = productDecline[i]
+                const idDecline = productDecline[i].id
                 
-                    //Monta o Objeto professor de acordo com o expand passado na query
-                    if(expand){
-                        expand = expand.split(',')
+                //variaveis para controle da query expand
+                var {expand} = query
+                var objectService, objectProduct;
+            
+                //Monta o Objeto professor de acordo com o expand passado na query
+                if(expand){
+                    expand = expand.split(',')
 
-                        //Se possuir expand para company, busca o cara
-                        if(expand.indexOf('service') > -1){
-                            objectService = await Service.findOne({
-                                where:{
-                                    id : id_service
-                                }
-                            })
-                        }
+                    //Se possuir expand para company, busca o cara
+                    if(expand.indexOf('service') > -1){
+                        objectService = await Service.findOne({
+                            where:{
+                                id : id_service
+                            }
+                        })
                     }
-
-                    objectProduct = await Product.findOne({
-                        where:{
-                            id : id_pizza
-                        }
-                    })
-                  
-                    _items[i] = { 
-                            id: idDecline, 
-                            //service: objectService ? objectService : { id: id_service }, 
-                            product: objectProduct ? objectProduct : { id: id_pizza }, 
-                            is_available, 
-                            createdAt, 
-                            updatedAt
-                        } 
-                      
-                };
-
-                return {
-                    service,
-                    options: _items
                 }
 
+                objectProduct = await Product.findOne({
+                    where:{
+                        id : id_pizza
+                    }
+                })
+                
+                _items[i] = { 
+                        id: idDecline, 
+                        //service: objectService ? objectService : { id: id_service }, 
+                        product: objectProduct ? objectProduct : { id: id_pizza }, 
+                        is_available, 
+                        createdAt, 
+                        updatedAt
+                    } 
+                    
+            };
+
+            return {
+                service,
+                options: _items
             }
 
         }catch(err){

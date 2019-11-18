@@ -43,7 +43,7 @@ module.exports = app => {
         try{
             
             //Valida as regras de negocio e retorna o objeto caso esteja correto
-            const Decline = await app.src.services.ProductDeclineService.store(req.body, req.headers)
+            const Decline = await app.src.services.ProductDeclineService.store(req.body, req.params, req.headers)
 
             //Retorna o json com status de sucesso para o usuário
             return res.send(Decline)

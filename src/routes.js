@@ -55,15 +55,8 @@ module.exports = app => {
         .put(app.src.controllers.ServiceController.update)
 
     //Rota para as pizzas 
-    app.route(URL + 'product-decline')
-        .all(app.src.config.passport.authenticate())
+    app.route(URL + 'attendance/:idTable/product-decline')
         .post(app.src.controllers.ProductDeclineController.store)
-        .get(app.src.controllers.ProductDeclineController.index)
-    app.route(URL + 'product-decline/:id')
-        .all(app.src.config.passport.authenticate())
-        .delete(app.src.controllers.ProductDeclineController.destroy)
-        .get(app.src.controllers.ProductDeclineController.show)  
-        .put(app.src.controllers.ProductDeclineController.update) 
 
     //Rota para as mesas
     app.route(URL + 'table')
@@ -76,10 +69,10 @@ module.exports = app => {
         .get(app.src.controllers.TableController.show)  
         .put(app.src.controllers.TableController.update)
 
-    app.route(URL + 'attendance/:idTable/:idCompany')
+    app.route(URL + 'attendance/:idTable')
         .get(app.src.controllers.AttendanceController.get)
 
-    app.route(URL + 'qrcode/:idTable/:idCompany')
+    app.route(URL + 'qrcode/:idTable')
         .all(app.src.config.passport.authenticate())
         .get(app.src.controllers.QrCodeController.get)
 
