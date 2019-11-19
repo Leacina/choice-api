@@ -14,7 +14,8 @@ module.exports = app => {
         
         try{
             const {descriptografar} = app.src.config.crypto
-            const {id_product, id_service} = body
+            const id_product = body.product.id
+            const id_service = body.service.id
             const isAvailable =  body.isAvailable == null ? false : body.isAvailable
           
             const idTable = parseInt(descriptografar(params.idTable))
