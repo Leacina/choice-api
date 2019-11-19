@@ -1,5 +1,4 @@
 module.exports = app => {
-
     /**
      * Comando executado para buscar um dado
      * @param {request} req 

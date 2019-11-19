@@ -5,7 +5,7 @@ const Sequelize = require('sequelize')
 
 module.exports = app => {
     const {existsOrError} = app.src.services.ValidationService;
-  
+   
     /**
      * Valida os dados que serão inseridos
      * @param {Valor que será validado} body
@@ -13,11 +13,12 @@ module.exports = app => {
     const store = async (body, params, headers) => {
         
         try{
+            const {descriptografar, criptografar} = app.src.config.crypto
             const {id_product, id_service} = body
             const is_available =  body.is_available == null ? false : body.is_available
-
-            const {idTable} = params
-
+          
+            const idTable = parseInt(descriptografar(criptografar('4')))
+        
             //Verifica se o objeto passado esta correto
             existsOrError(body,'Formato dos dados invalido')
 

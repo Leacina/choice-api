@@ -2,6 +2,7 @@ const { Table } = require('../models');
 const qr = require('qr-image')
 
 module.exports = app => {
+
     /**
      * Comando executado para buscar um dado
      * @param {request} req 
@@ -9,21 +10,23 @@ module.exports = app => {
      */
     const get = async (req, res) => {
         try{
+            const {criptografar} = app.src.config.crypto
             //TODO: Eu sei que não pode isso no controller...
             // Vou ajustar...CORRERIAA
-            const table = Table.findOne({
+            const table = await Table.findOne({
                 where:{
-                    id: idTable
+                    id: req.params.idTable
                 }
             })
-
+            
             if(!table) throw {
                 erro:"Mesa não encontrada!",
                 status:400
             }
-
+            
             const url = 'https://choice.app/attendance/'
-            const code = qr.image(url + req.params.idTable, { type: 'png' })
+       
+            const code = qr.image(url + criptografar(req.params.idTable), { type: 'png' })
   
             res.type('png')
         
