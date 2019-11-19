@@ -11,7 +11,8 @@ module.exports = app => {
     const get = async (query, params, headers) => {
         
         try{
-            const { idTable } = params
+            const {descriptografar} = app.src.config.crypto
+            const idTable = parseInt(descriptografar(params.idTable))
     
             //Busca se existe algum serviço aberto para esta mesa
             var service = await Service.findOne({
