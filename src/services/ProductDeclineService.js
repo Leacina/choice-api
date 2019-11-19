@@ -15,7 +15,7 @@ module.exports = app => {
         try{
             const {descriptografar} = app.src.config.crypto
             const {id_product, id_service} = body
-            const is_available =  body.is_available == null ? false : body.is_available
+            const isAvailable =  body.isAvailable == null ? false : body.isAvailable
           
             const idTable = parseInt(descriptografar(params.idTable))
     
@@ -79,7 +79,7 @@ module.exports = app => {
                 return await Product_Decline.update({
                     id_pizza: id_product,
                     id_service,
-                    is_available
+                    is_available: isAvailable
                 },{
                     where:{
                             id_pizza: id_product,
@@ -93,7 +93,7 @@ module.exports = app => {
             return Product_Decline.create({
                 id_pizza: id_product,
                 id_service,
-                is_available
+                is_available: isAvailable
             })
            
         }catch(err){

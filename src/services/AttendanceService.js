@@ -136,7 +136,7 @@ module.exports = app => {
                         id: idDecline, 
                         //service: objectService ? objectService : { id: id_service }, 
                         product: objectProduct ? objectProduct : { id: id_pizza }, 
-                        is_available, 
+                        isAvailable: is_available, 
                         createdAt, 
                         updatedAt
                     } 
