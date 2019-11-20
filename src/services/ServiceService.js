@@ -170,7 +170,7 @@ module.exports = app => {
             //Faz o split para pegar todos os order e sort
             var sortArray = sort ? sort.split(',') : []
             var orderArray = order ? order.split(',') : []
-        
+            
             //Variavel para armezar o array de order e sort
             let _order = [];
           
@@ -179,7 +179,7 @@ module.exports = app => {
                 //Acumulador do order by
                 _order[i] = [(sortArray[i] || 'id'), (orderArray[i] || 'ASC')]
             }
-           
+          
             //Retorna todos as empresas
             const todosItemsTotal = await Service.findAll({
                 where: {
@@ -203,7 +203,7 @@ module.exports = app => {
               
                 if(table.id_company == _token.id_company) itemsTotal[itemsTotal.length] = todosItemsTotal[i]
             }
-
+            
             //Retorna todos as empresas
             const todosItems = await Service.findAll({
                 where: {
@@ -311,7 +311,7 @@ module.exports = app => {
             //Monta o Objeto professor de acordo com o expand passado na query
             if(expand){
                 expand = expand.split(',')
-
+                
                 //Se possuir expand para teacher, busca o cara
                 if(expand.indexOf('company') > -1){
                     objectTable = await Company.findOne({

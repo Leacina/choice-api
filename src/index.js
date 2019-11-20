@@ -1,10 +1,13 @@
 const express = require('express')
 const app = express()
 const consign = require('consign')
+const request = require('request')
+const cheerio = require('cheerio')
 
 consign()
 .include('./src/config/passport.js')
     .then('./src/config/middlewares.js')
+    .then('./schedule')
     .then('./src/config/crypto.js')
     .then('./src/services/ValidationService.js')
     .then('./src/services')
