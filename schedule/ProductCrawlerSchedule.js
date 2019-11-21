@@ -84,6 +84,21 @@ module.exports = app => {
                     ingredients
                 })
             }
+            //TODO: Agrega os ingredientes
+            /*
+            else if(product_mining.ingredients != ingredients){
+                ingredients
+
+                Product_Mining.update({
+                    ingredients
+                },
+                {
+                    where:{
+                        name
+                    }
+                })
+            }
+            */
         }
     }
 

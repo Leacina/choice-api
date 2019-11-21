@@ -77,6 +77,7 @@ module.exports = app => {
         .get(app.src.controllers.QrCodeController.get)
 
     app.route(URL + 'product-mining')
+        .all(app.src.config.passport.authenticate())
         .get(app.src.controllers.ProductMiningController.index)
 
     app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
