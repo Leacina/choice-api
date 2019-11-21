@@ -54,7 +54,7 @@ module.exports = app => {
     async function minerateDate(){
     
         const product_crawler = await Product_Crawler.findAll()
-
+        var ingredients, name
         //Percorre todos os registro para "minerar" dados
         for(let i = 0; i < product_crawler.length; i++){
             //Se não possuir nome de pizza
@@ -62,21 +62,26 @@ module.exports = app => {
                 continue
             }
 
+            ingredients = product_crawler[i].ingredients.trim()
+            name = product_crawler[i].name
+
+            ingredients = ingredients[0].toUpperCase() + ingredients.substring(1).toLowerCase()
+            name = name.replace(/[0-9.-]{4}/g,'').replace(/[0-9.-]{3}/g,'').trim()
+
             //Verifica se já tem o produto na tabela origem
             const product_mining = await Product_Mining.findOne({
                 where:{
-                    name: product_crawler[i].name
+                    name
                 }
             })
 
             //Se não possuir esse produto lá... Add
             if(!product_mining){
-                var ingredients = product_crawler[i].ingredients.trim()
-                ingredients = ingredients[0].toUpperCase() + ingredients.substring(1).toLowerCase()
-        
+                name = name[0].toUpperCase() + name.substring(1).toLowerCase()
+
                 Product_Mining.create({
-                    name: product_crawler[i].name,
-                    ingredients: ingredients
+                    name,
+                    ingredients
                 })
             }
         }

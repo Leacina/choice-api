@@ -21,8 +21,8 @@ module.exports = app => {
 
             //Verifica se possui todos os dados foram passados
             existsOrError(name,'Nome não foi informado')
-            existsOrError(ingredients,'Ingrediente não foi informado')
-            existsOrError(description,'Descrição do produto não foi informada')
+            //existsOrError(ingredients,'Ingrediente não foi informado')
+            //existsOrError(description,'Descrição do produto não foi informada')
             //existsOrError(image,'Nome não foi informado')
 
             const _token = jwt.decode(headers.authorization.replace('Bearer', '').trim(), authSecret);
@@ -46,9 +46,9 @@ module.exports = app => {
             //Insere o dado no banco de dados, caso de algum problema, lança uma exceção
             return Product.create({
                     name,
-                    ingredients,
-                    description,
-                    image,
+                    ingredients: ingredients || '',
+                    description: description || '',
+                    image: image || '',
                     active,
                     id_company: _token.id_company
             })
