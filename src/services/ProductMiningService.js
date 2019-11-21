@@ -34,32 +34,18 @@ module.exports = app => {
             //Retorna todos as empresas
             const ItemsTotal = await Product_Mining.findAll({
                 where: {
-                        [Op.or]: {
-                        
                             name: {
-                                [Op.like]: `%${search || ''}%`
-                            },
-                            ingredients: {
                                 [Op.like]: `%${search || ''}%` 
                             }
-                        ,
-                        }
                 },
             })
                
             //Retorna todos as empresas
             const items = await Product_Mining.findAll({
                 where: {
-                    [Op.or]: {
-                    
                         name: {
                             [Op.like]: `%${search || ''}%`
-                        },
-                        ingredients: {
-                            [Op.like]: `%${search || ''}%` 
                         }
-                    ,
-                    }
             },
                 limit: parseInt(limit) || null,
                 offset: ((parseInt(page) - 1) * limit) || null,
