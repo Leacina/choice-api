@@ -72,7 +72,7 @@ module.exports = app => {
                 //Percorre todos os produtos cadastrados
                 for(let y = 0; y < product.length; y++){
                     //Verifica se possui algum com mesmo nome
-                    if(items[i].name == product[y].name){
+                    if(items[i].name.toUpperCase() == product[y].name.toUpperCase()){
                         isUsage = false; 
                     }
                 }
